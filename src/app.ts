@@ -1,10 +1,11 @@
 import "@babylonjs/core/Debug/debugLayer";
 import "@babylonjs/inspector";
 import "@babylonjs/loaders/glTF";
-import { Engine, Scene, ArcRotateCamera, FreeCamera, Vector3, HemisphericLight, Mesh, MeshBuilder, Color4, Sound, Matrix, Quaternion, StandardMaterial, Color3, PointLight, ShadowGenerator } from "@babylonjs/core";
+import { Engine, Scene, FreeCamera, Vector3, HemisphericLight, Mesh, MeshBuilder, Color4, Sound, Matrix, Quaternion, StandardMaterial, Color3, PointLight, ShadowGenerator } from "@babylonjs/core";
 import { AdvancedDynamicTexture, Button, Control } from "@babylonjs/gui"
 import { Environment } from "./environment";
 import { Player } from "./characterController";
+import { PlayerInput } from "./inputController";
 //enum for states
 enum State { START = 0, GAME = 1, LOSE = 2, CUTSCENE = 3 }
 
@@ -40,6 +41,7 @@ class App {
     //post process
     private _transition: boolean = false;
 
+    private _input!: PlayerInput;
     private _player!: Player;
 
     constructor() {
@@ -49,10 +51,6 @@ class App {
 
         this._engine = new Engine(this._canvas, true);
         this._scene = new Scene(this._engine);
-
-        //let camera: ArcRotateCamera = new ArcRotateCamera("Camera", Math.PI / 2, Math.PI / 2, 2, Vector3.Zero(), this._scene);
-        //camera.attachControl(this._canvas, true);
-
 
         window.addEventListener('keydown', (ev: KeyboardEvent) => {
             // Shift+Ctrl+Alt+I
@@ -219,6 +217,11 @@ class App {
         await this._loadCharacterAssets(scene); //character
     }
 
+    /**
+     * 
+     * @param scene 
+     * @returns Promise with loaded assets
+     */
     private async _loadCharacterAssets(scene: Scene): Promise<any> {
 
         async function loadCharacter() {
@@ -241,7 +244,6 @@ class App {
             box.position.y = 1.5;
             box.position.z = 1;
 
-            // const bodyx = Mesh.CreateCylinder("body", 3, 2, 2, 0, 0, scene);
             let optionsCylinder = {
                 height: 3,
                 diameterTop: 2,
@@ -308,9 +310,7 @@ class App {
             scene.detachControl(); //observables disabled
         });
 
-        // let light1: HemisphericLight = new HemisphericLight("light1", new Vector3(1, 1, 0), scene);
-        // let sphere: Mesh = MeshBuilder.CreateSphere("sphere", { diameter: 1 }, scene);
-
+        this._input = new PlayerInput(scene);
         //primitive character and setting
         await this._initializeGameAsync(scene);
 
@@ -370,7 +370,8 @@ class App {
         shadowGenerator.darkness = 0.4;
 
         //Create the player
-        this._player = new Player(this.assets, scene, shadowGenerator); //dont have inputs yet so we dont need to pass it in
+        this._player = new Player(this.assets, scene, shadowGenerator, this._input); //dont have inputs yet so we dont need to pass it in
+        const camera = this._player.activatePlayerCamera();
     }
 }
 

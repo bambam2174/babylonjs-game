@@ -1,0 +1,57 @@
+{
+    // Verwendet IntelliSense zum Ermitteln möglicher Attribute.
+    // Zeigen Sie auf vorhandene Attribute, um die zugehörigen Beschreibungen anzuzeigen.
+    // Weitere Informationen finden Sie unter https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Launch via NPM",
+            "request": "launch",
+            "runtimeArgs": [
+                "run-script",
+                "start"
+            ],
+            "runtimeExecutable": "npm",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "type": "node"
+        },
+        {
+            "type": "chrome",
+            "request": "launch",
+            "name": "Chrome mit \"localhost:8080\" starten",
+            "preLaunchTask": "npm: build",
+            "url": "http://localhost:8080",
+            "webRoot": "${workspaceFolder}/dist"
+        },
+        {
+            "type": "chrome",
+            "request": "launch",
+            "name": "Launch Chrome against \"localhost:8081\"",
+            "preLaunchTask": "npm: build",
+            "url": "http://localhost:8081",
+            "webRoot": "${workspaceRoot}/dist",
+            "sourceMaps": true,
+            "trace": true
+        },
+        {
+            "type": "chrome",
+            "request": "launch",
+            "name": "Launch Chrome against \"localhost:8081\"",
+            "preLaunchTask": "npm: build",
+            "url": "http://localhost:8081",
+            "webRoot": "${workspaceRoot}/dist",
+            "sourceMaps": true,
+            "trace": true
+        },
+        {
+            "type": "chrome",
+            "request": "launch",
+            "name": "Launch Chrome against \"localhost:4200\"",
+            "preLaunchTask": "npm: build",
+            "url": "http://localhost:4200/",
+            "webRoot": "${workspaceFolder}/dist"
+        }
+    ]
+}

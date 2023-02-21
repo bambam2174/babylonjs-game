@@ -11,6 +11,11 @@ export class PlayerInput {
     public horizontal = 0;
     public horizontalAxis;
 
+    //jumping and dashing
+    public jumpKeyDown: boolean = false;
+    public dashDxn: number = 0;
+    public dashing: boolean = false;
+
     constructor(scene: Scene) {
         scene.actionManager = new ActionManager(scene);
 
@@ -51,6 +56,25 @@ export class PlayerInput {
         } else {
             this.horizontal = Scalar.Lerp(this.horizontal, 0, 0.2);
             this.horizontalAxis = 0;
+        }
+
+        // TODO: Try the lines below and refactor if feasible
+        // [ ]: log this.inputMap["Shift"]
+        // [ ]: log this.inputMap[" "]
+        /*
+        [ ]: try this.dashing = this.inputMap["Shift"];
+        [ ]: try this.jumpKeyDown = this.inputMap[" "];
+        */
+        if (this.inputMap["Shift"]) {
+            this.dashing = true;
+        } else {
+            this.dashing = false;
+        }
+
+        if (this.inputMap[" "]) {
+            this.jumpKeyDown = true;
+        } else {
+            this.jumpKeyDown = false;
         }
     }
 }

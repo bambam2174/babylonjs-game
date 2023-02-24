@@ -32,10 +32,10 @@ jobs:
       - run: npm run build
       - run: echo "dist built"
       - run: echo "copy assets to dist"
-      - run: cp ./public/models ./dist/
-      - run: cp ./public/sounds ./dist/
-      - run: cp ./public/sprites ./dist/
-      - run: cp ./public/textures ./dist/
+      - run: cp -r ./public/models ./dist/
+      - run: cp -r ./public/sounds ./dist/
+      - run: cp -r ./public/sprites ./dist/
+      - run: cp -r ./public/textures ./dist/
   # Single deploy job since we're just deploying
   deploy:
     environment:

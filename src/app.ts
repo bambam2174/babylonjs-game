@@ -1,7 +1,7 @@
 import "@babylonjs/core/Debug/debugLayer";
 import "@babylonjs/inspector";
 import "@babylonjs/loaders/glTF";
-import { Engine, Scene, FreeCamera, Vector3, HemisphericLight, Mesh, MeshBuilder, Color4, Sound, Matrix, Quaternion, StandardMaterial, Color3, PointLight, ShadowGenerator } from "@babylonjs/core";
+import { Engine, Scene, FreeCamera, Vector3, HemisphericLight, Mesh, MeshBuilder, Color4, Sound, Matrix, Quaternion, StandardMaterial, Color3, PointLight, ShadowGenerator, SceneLoader } from '@babylonjs/core';
 import { AdvancedDynamicTexture, Button, Control } from "@babylonjs/gui"
 import { Environment } from "./environment";
 import { Player } from "./characterController";
@@ -189,15 +189,15 @@ class App {
         next.left = "-12%";
         cutScene.addControl(next);
 
-        next.onPointerUpObservable.add(() => {
-            this._goToGame();
-        });
+
 
         //--START LOADING AND SETTING UP THE GAME DURING THIS SCENE--
         let finishedLoading = false;
         await this._setUpGame().then(res => {
             finishedLoading = true;
-
+            next.onPointerUpObservable.add(() => {
+                this._goToGame();
+            });
         });
     }
 
@@ -240,6 +240,20 @@ class App {
 
             outer.rotationQuaternion = new Quaternion(0, 1, 0, 0); // rotate the player mesh 180 since we want to see the back of the player
 
+            return SceneLoader.ImportMeshAsync(null, "./models/", "player.glb", scene).then(result => {
+                const body = result.meshes[0];
+                //body is our actual player mesh
+                body.parent = outer;
+                body.isPickable = false;
+                body.getChildMeshes().forEach(m => {
+                    m.isPickable = false;
+                });
+
+                return {
+                    mesh: outer
+                }
+            });
+            /*
             const box = MeshBuilder.CreateBox("Small1", { width: 0.5, depth: 0.5, height: 0.25, faceColors: [new Color4(0, 0, 0, 1), new Color4(0, 0, 0, 1), new Color4(0, 0, 0, 1), new Color4(0, 0, 0, 1), new Color4(0, 0, 0, 1), new Color4(0, 0, 0, 1)] }, scene);
             box.position.y = 1.5;
             box.position.z = 1;
@@ -266,6 +280,7 @@ class App {
             return {
                 mesh: outer
             }
+            */
         }
 
         return loadCharacter().then(assets => {
@@ -316,7 +331,7 @@ class App {
 
         //--WHEN SCENE FINISHED LOADING--
         await scene.whenReadyAsync();
-        scene.getMeshByName("outer")!.position = new Vector3(0, 3, 0);
+        scene.getMeshByName("outer")!.position = scene.getTransformNodeByName("startPosition")!.getAbsolutePosition();
 
         //get rid of start scene, switch to gamescene and change states
         this._scene.dispose();

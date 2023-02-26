@@ -1,5 +1,5 @@
 import { MeshBuilder, Scene, SceneLoader, Vector3 } from "@babylonjs/core";
-
+import modelEnvSetting from "../assets/models/envSetting.glb";
 
 
 export class Environment {
@@ -23,7 +23,7 @@ export class Environment {
 
     public async _loadAsset() {
 
-        const result = await SceneLoader.ImportMeshAsync(null, "./models/", "envSetting.glb", this._scene);
+        const result = await SceneLoader.ImportMeshAsync(null, "", modelEnvSetting, this._scene);
 
         let env = result.meshes[0];
         let allMeshes = env.getChildMeshes();

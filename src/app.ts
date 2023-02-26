@@ -6,6 +6,9 @@ import { AdvancedDynamicTexture, Button, Control } from "@babylonjs/gui"
 import { Environment } from "./environment";
 import { Player } from "./characterController";
 import { PlayerInput } from "./inputController";
+
+import modelPlayer from "../assets/models/player.glb"
+// import modelAlien from "../assets/models/alien.glb"
 //enum for states
 enum State { START = 0, GAME = 1, LOSE = 2, CUTSCENE = 3 }
 
@@ -19,8 +22,6 @@ class App {
 
     //Game State Related
     public assets;
-    // private _input: PlayerInput;
-    // private _player: Player;
     // private _ui: Hud;
     // private _environment;
 
@@ -240,7 +241,7 @@ class App {
 
             outer.rotationQuaternion = new Quaternion(0, 1, 0, 0); // rotate the player mesh 180 since we want to see the back of the player
 
-            return SceneLoader.ImportMeshAsync(null, "./models/", "player.glb", scene).then(result => {
+            return SceneLoader.ImportMeshAsync(null, "", modelPlayer, scene).then(result => {
                 const body = result.meshes[0];
                 //body is our actual player mesh
                 body.parent = outer;
